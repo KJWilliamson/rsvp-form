@@ -1,0 +1,58 @@
+const express = require("express");
+const mongoose = require("mongoose");
+
+const port = 3000;
+
+
+mongoose.connect("mongodb://localhost:27017/rsvp", { useUnifiedTopology: true, useNewUrlParser: true });
+const app = express();
+
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }))
+
+app.set("view engine", "pug");
+
+
+const Schema = mongoose.Schema;
+const resSchema = new Schema({
+  name: String,
+  email: String,
+  attending: String,
+  guests: Number
+});
+
+const Response = mongoose.model("Response", resSchema);
+const rsvp = mongoose.connection;
+
+rsvp.on("error", console.error.bind(console, "connection error"));
+rsvp.once("open", function() {
+  console.log("success");
+});
+
+app.listen(port, console.log("Listening on port " + port));
+
+app.get("/", function(req, res) {
+  res.render("main");
+});
+
+app.get("/guestlist", function(req, res) {
+  Response.find(function(err, userRes) {
+    if (err) return console.error(err);
+    console.log(userRes);
+    res.render("guestList", { userRes });
+  });
+});
+
+app.post("/rsvp", function(req, res) {
+  const userRes = new Response({
+    name: req.body.name,
+    email: req.body.email,
+    attending: req.body.attending,
+    guests: req.body.guests
+  });
+  userRes.save(function(err, userRes) {
+    if (err) return console.error(err);
+    res.render("signupsuccess");
+  });
+});

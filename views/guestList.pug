@@ -1,0 +1,17 @@
+html
+    head
+        title RSVP Guest List
+        link(rel="stylesheet" type="text/css" media="screen" href="style.css")
+    body
+        h1 Guest List
+            ul Attending
+                each guest in userRes
+                    if guest.attending === "yes"
+                        if guest.guests !== 0
+                            li= `${guest.name} (with ${guest.guests} guests)`
+                        else
+                            li= `${guest.name} (with no guests)`
+            ul Not Attending
+                each guest in userRes
+                    if guest.attending === "no"
+                        li= guest.name
