@@ -1,6 +1,7 @@
 RESOURCE
 
 https://www.youtube.com/watch?v=9Qzmri1WaaE
+https://expressjs.com/en/guide/routing.html
 
 
 
